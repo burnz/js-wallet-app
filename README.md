@@ -1,4 +1,4 @@
-#for v2 see sagas+test branch
+# for v2 see sagas+test branch
 
 # JS Wallet App for coins.ph
 # Installation
