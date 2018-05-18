@@ -1,3 +1,5 @@
+#for v2 see sagas+test branch
+
 # JS Wallet App for coins.ph
 # Installation
 1. git clone;
