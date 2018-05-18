@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux-immutable';
 import balanceReducer from '../components/GetBalanceForm/reducer';
-import transactionReducer from '../components/SendCoinsForm/reducer';
+import loginReducer from '../components/reducer';
+import transactionsReducer from '../components/SendCoinsForm/reducer';
 import routeReducer from './routeReducer';
 
 const rootReducer = combineReducers({
     routing: routeReducer,
+    login: loginReducer,
     balance: balanceReducer,
-    transaction: transactionReducer,
+    transactions: transactionsReducer,
 });
 
 export default rootReducer;

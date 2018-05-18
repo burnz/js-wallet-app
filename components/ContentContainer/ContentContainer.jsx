@@ -1,54 +1,77 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import GetBalanceForm from '../GetBalanceForm';
-import { dataStates } from '../GetBalanceForm/reducer';
+import { dataStates } from '../../helpers/dataStates';
+import FormError from '../FormError/FormError';
+import BalanceForm from '../GetBalanceForm';
 import Loader from '../Loader/Loader';
 import SendCoinsForm from '../SendCoinsForm';
 
-const ContentContainer = ({ balance, transaction }) => {
-    const balanceState = balance.get('state');
-    const transactionState = transaction.get('state');
-    const { notAsked, loading, loaded, failed } = dataStates;
-    const isAnyLoading = balanceState === loading || transactionState === loading;
-    const isSendScreen = balanceState === loaded && transactionState !== failed && transactionState !== loading;
-    const isFailed = balanceState === failed || transactionState === failed;
+const ContentContainer = ({ login, balance, transactions }) => {
+    const loginState = login.get('dataState');
+    const balanceState = balance.get('dataState');
+    const transactionsState = transactions.get('dataState');
+    const loginError = login.get('error');
+    const balanceAmount = balance.getIn(['data', 'confirmedBalanceString']);
+    const { loading, failed } = dataStates;
+
+    const loginIsLoading = loginState === loading;
+
+    const isAnyLoading =
+        loginIsLoading ||
+        balanceState === loading ||
+        transactionsState === loading;
+
+    const isAnyFailed =
+        loginState === failed ||
+        balanceState === failed ||
+        transactionsState === failed;
+
+    const getTitle = isAnyFailed
+        ? 'Something went wrong...'
+        : !balanceAmount
+                         ? 'Get Your Balance'
+                         : 'Send Some Coins';
+
     return (
         <div className='content-wrapper'>
             <div className='content'>
-                {isAnyLoading && <Loader/>}
-                <h2 className='content-head is-center'>
-                    {balanceState === notAsked && 'Get Your Balance'}
-                    {isSendScreen && 'Send Some Coins'}
-                    {isFailed && 'Something went wrong...'}
-                </h2>
-                <div className='pure-g'>
-                    <div className='l-box-lrg pure-u-1 pure-u-md-2-5'>
-                        {balanceState === notAsked && <GetBalanceForm/>}
-                        {isSendScreen && <SendCoinsForm/>}
-                    </div>
-                </div>
+                {isAnyLoading
+                    ? (<Loader/>)
+                    : (<h2 className='content-head is-center'>{getTitle}</h2>)
+                }
+                {loginError
+                    ? (<FormError error={loginError}/>)
+                    : (<div className='pure-g'>
+                        <div className='l-box-lrg pure-u-1 pure-u-md-2-5'>
+                            {!loginIsLoading
+                                ? (<div>
+                                    {!balanceAmount
+                                        ? <BalanceForm balance={balance}/>
+                                        : <SendCoinsForm transactions={transactions}/>}
+                                </div>)
+                                : null
+                            }
+                        </div>
+                    </div>)
+                }
             </div>
-            <div className='footer l-box is-center'>
-                Coins Coins Coins...
-            </div>
+            <div className='footer l-box is-center'>Coins Coins Coins...</div>
         </div>
     );
 };
 
 ContentContainer.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node,
-    ]),
+    login: PropTypes.shape({}),
     balance: PropTypes.shape({}),
-    transaction: PropTypes.shape({}),
+    transactions: PropTypes.shape({}),
 };
 
 const mapStateToProps = state => {
     return {
+        login: state.get('login'),
         balance: state.get('balance'),
-        transaction: state.get('transaction'),
+        transactions: state.get('transactions'),
     };
 };
 

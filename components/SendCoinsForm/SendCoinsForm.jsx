@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { dataStates } from '../GetBalanceForm/reducer';
-import { sendCoins } from './actions';
+import { dataStates } from '../../helpers/dataStates';
+import FormError from '../FormError/FormError';
+import { init } from './actions';
 
 class SendCoinsForm extends React.PureComponent {
     static propTypes = {
         sendCoins: PropTypes.func,
-        balance: PropTypes.shape({}),
+        transactions: PropTypes.shape({}),
     };
 
     state = {
@@ -31,15 +32,17 @@ class SendCoinsForm extends React.PureComponent {
     handleSubmit = (e) => {
         e.preventDefault();
         const { from, to, amount } = this.state;
-        this.props.sendCoins({ from, to, amount });
+        this.props.init({ params: { from, to, amount } });
     };
 
     render() {
-        const { balance } = this.props;
-        const isLoading = balance.get('state') === dataStates.state;
+        const { transactions } = this.props;
+        const isLoading = transactions.get('dataState') === dataStates.loading;
+        const error = transactions.get('error');
         const { from, to, amount } = this.state;
         return (
             <form className='pure-form pure-form-stacked' onSubmit={this.handleSubmit}>
+                {error && <FormError error={error}/>}
                 <fieldset>
                     <label htmlFor='from'>Your Wallet Address</label>
                     <input
@@ -65,21 +68,15 @@ class SendCoinsForm extends React.PureComponent {
                         disabled={isLoading}
                         value={amount}
                         onChange={this.handleChangeAmount}/>
-                    <input className='pure-button' type='submit' value='SEND COINS'/>
+                    <input className='pure-button' type='submit' value='SEND COINS' disabled={isLoading}/>
                 </fieldset>
             </form>
         );
     }
 };
 
-const mapStateToProps = state => {
-    return {
-        balance: state.get('balance'),
-    };
-};
-
 const mapDispatchToProps = {
-    sendCoins,
+    init,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendCoinsForm);
+export default connect(null, mapDispatchToProps)(SendCoinsForm);

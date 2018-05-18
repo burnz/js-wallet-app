@@ -1,6 +1,6 @@
 {
   "name": "coins-wallet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "competition app for coins.ph",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
     "purecss": "^1.0.0",
+    "qs": "^6.5.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
@@ -22,6 +23,8 @@
     "redux": "^4.0.0",
     "redux-actions": "^2.3.2",
     "redux-immutable": "^4.0.0",
+    "redux-saga": "^0.16.0",
+    "redux-saga-routines": "^2.2.5",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {

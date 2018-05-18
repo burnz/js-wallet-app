@@ -8,7 +8,7 @@ const INITIAL_STATE = fromJS({
     error: null,
 });
 
-const balanceReducer = handleActions({
+const loginReducer = handleActions({
     [combineActions(Actions.init, Actions.loading)]: (state, { payload: { dataState } }) => {
         return state.set('dataState', dataState);
     },
@@ -23,4 +23,4 @@ const balanceReducer = handleActions({
     },
 }, INITIAL_STATE);
 
-export default balanceReducer;
+export default loginReducer;

@@ -1,24 +1,21 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { init } from './actions';
 import Header from './Header';
-import { authenticate, unlock } from './service';
 import Splash from './Splash';
 
-class App extends React.Component {
+class App extends Component {
     static propTypes = {
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.node),
             PropTypes.node,
         ]),
-        authenticate: PropTypes.func,
-        unlock: PropTypes.func,
+        loginInit: PropTypes.func,
     };
 
-    componentDidMount = async () => {
-        const { authenticate, unlock } = this.props;
-        await authenticate();
-        unlock();
+    componentWillMount = () => {
+        this.props.init({});
     };
 
     render() {
@@ -34,15 +31,8 @@ class App extends React.Component {
     }
 };
 
-const mapStateToProps = state => {
-    return {
-        balance: state.get('balance'),
-    };
-};
-
 const mapDispatchToProps = {
-    authenticate,
-    unlock,
+    init,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);

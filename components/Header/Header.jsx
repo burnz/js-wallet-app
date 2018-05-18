@@ -3,12 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Header = ({ balance }) => {
-    const amount = balance.get('amount');
+    const amount = balance.getIn(['data', 'confirmedBalanceString']);
     return (
         <div className='header'>
             <div className='home-menu pure-menu pure-menu-horizontal pure-menu-fixed'>
                 <a className='pure-menu-heading' href=''>COINS</a>
-
                 {amount &&
                 <ul className='pure-menu-list'>
                     <li className='pure-menu-item pure-menu-selected'>

@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { getBalance } from './actions';
-import { dataStates } from './reducer';
+import { dataStates } from '../../helpers/dataStates';
+import { init } from './actions';
+import FormError from '../FormError';
 
-class GetBalanceForm extends React.PureComponent {
+class BalanceForm extends PureComponent {
     static propTypes = {
-        getBalance: PropTypes.func,
+        init: PropTypes.func,
         balance: PropTypes.shape({}),
     };
 
@@ -19,36 +20,34 @@ class GetBalanceForm extends React.PureComponent {
     handleSubmit = (e) => {
         e.preventDefault();
         const { id } = this.state;
-        this.props.getBalance({ id });
+        this.props.init({ params: { id } });
     };
 
     render() {
+        const { balance } = this.props;
+        const isLoading = balance.get('dataState') === dataStates.loading;
+        const error = balance.get('error');
         return (
             <form className='pure-form pure-form-stacked' onSubmit={this.handleSubmit}>
+                {error && <FormError error={error}/>}
                 <fieldset>
                     <label htmlFor='address'>Your Wallet Address</label>
                     <input
                         id='address'
                         type='text'
                         placeholder='ID'
-                        disabled={this.props.balance.get('state') === dataStates.state}
+                        disabled={isLoading}
                         value={this.state.id}
                         onChange={this.handleChange}/>
-                    <input className='pure-button' type='submit' value='GET YOUR BALANCE'/>
+                    <input className='pure-button' type='submit' value='GET YOUR BALANCE' disabled={isLoading}/>
                 </fieldset>
             </form>
         );
     }
 };
 
-const mapStateToProps = state => {
-    return {
-        balance: state.get('balance'),
-    };
-};
-
 const mapDispatchToProps = {
-    getBalance,
+    init,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetBalanceForm);
+export default connect(null, mapDispatchToProps)(BalanceForm);

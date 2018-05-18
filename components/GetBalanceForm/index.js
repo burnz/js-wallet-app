@@ -1,3 +1,3 @@
-import GetBalanceForm from './GetBalanceForm';
+import BalanceForm from './BalanceForm';
 
-export default GetBalanceForm;
+export default BalanceForm;

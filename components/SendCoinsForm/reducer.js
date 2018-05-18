@@ -1,22 +1,26 @@
 import { fromJS } from 'immutable';
-import { handleActions } from 'redux-actions';
-import * as Types from './types';
-import { dataStates } from '../GetBalanceForm/reducer';
+import { combineActions, handleActions } from 'redux-actions';
+import * as Actions from './actions';
 
 const INITIAL_STATE = fromJS({
-    state: dataStates.notAsked,
+    data: [],
+    dataState: null,
+    error: null,
 });
 
-const transactionReducer = handleActions({
-    [Types.SET_TRANSACTION_LOADING]: state => {
-        return state.set('state', dataStates.loading);
+const transactionsReducer = handleActions({
+    [combineActions(Actions.init, Actions.loading)]: (state, { payload: { dataState } }) => {
+        return state.set('dataState', dataState);
     },
-    [Types.SET_TRANSACTION_LOADED]: state => {
-        return state.set('state', dataStates.loaded);
+    [combineActions(Actions.loaded)]: (state, { payload: { dataState, data } }) => {
+        return state
+            .set('dataState', dataState)
+            .update('data', arr => arr.push(fromJS(data)))
+            .set('error', null);
     },
-    [Types.SET_TRANSACTION_FAILED]: state => {
-        return state.set('state', dataStates.failed);
+    [combineActions(Actions.failed)]: (state, { payload: { dataState, err } }) => {
+        return state.set('dataState', dataState).set('error', fromJS(err));
     },
 }, INITIAL_STATE);
 
-export default transactionReducer;
+export default transactionsReducer;

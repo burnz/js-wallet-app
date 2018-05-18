@@ -4,7 +4,7 @@ const Splash = () => {
     return (
         <div className='splash-container'>
             <div className='splash'>
-                <h1 className='splash-head'>JS WALLET APP</h1>
+                <h1 className='splash-head'>JS WALLET APP v2</h1>
                 <p className='splash-subhead'>
                     By Maxim Efimov
                 </p>

@@ -3,16 +3,33 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 import browserHistory from 'react-router/lib/browserHistory';
-import configureStore from './configureStore';
+import { applyMiddleware, compose, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import thunk from 'redux-thunk';
+import { configureHttpService } from './http';
 import './index.css';
+import rootReducer from './reducers';
 import { Routes } from './routes';
-import configureHttpService from './services/http';
+import rootSaga from './sagas';
 
-export const store = configureStore();
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(
+        routerMiddleware(browserHistory),
+        thunk,
+        sagaMiddleware,
+    )),
+);
 
 configureHttpService(store);
+
+sagaMiddleware.run(rootSaga);
 
 const history = syncHistoryWithStore(browserHistory, store, {
     selectLocationState(state) {
