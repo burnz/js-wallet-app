@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "bitgo": "^4.27.0",
     "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
     "purecss": "^1.0.0",
