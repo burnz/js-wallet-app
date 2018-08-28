@@ -5,8 +5,7 @@ import * as Service from './service';
 function* createTransaction({ payload: { params } }) {
     try {
         yield put(Actions.loading({}));
-        const transactionRes = yield call(Service.sendCoins, params);
-        const { data } = transactionRes;
+        const { data } = yield call(Service.sendCoins, params);
         yield put(Actions.loaded({ data }));
     } catch (err) {
         yield put(Actions.failed({ err: err.toString() }));

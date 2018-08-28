@@ -5,8 +5,7 @@ import * as Service from './service';
 function* loadBalance({ payload: { params } }) {
     try {
         yield put(Actions.loading({}));
-        const balanceRes = yield call(Service.getBalance, params);
-        const { data } = balanceRes;
+        const { data } = yield call(Service.getBalance, params);
         yield put(Actions.loaded({ data }));
     } catch (err) {
         yield put(Actions.failed({ err: err.toString() }));
